@@ -1,18 +1,28 @@
+let playCount = 0;
+let lastComputerChoice = "";
+
 function playGame(playerChoice) {
 
-    // Generate a random number between 0 and 2
-    let randomNumber = Math.floor(Math.random() * 3);
+    // Stop the game after 3 plays
+    if (playCount >= 3) {
+        document.getElementById("result").innerHTML =
+            "Game over! You have played 3 times.";
+        return;
+    }
 
+    let choices = ["rock", "paper", "scissors"];
     let computerChoice;
 
-    // Decide the computer's choice
-    if (randomNumber === 0) {
-        computerChoice = "rock";
-    } else if (randomNumber === 1) {
-        computerChoice = "paper";
-    } else {
-        computerChoice = "scissors";
-    }
+    // Make sure the computer changes its choice each time
+    do {
+        let randomNumber = Math.floor(Math.random() * 3);
+        computerChoice = choices[randomNumber];
+    } while (computerChoice === lastComputerChoice);
+
+    lastComputerChoice = computerChoice;
+
+    // Count this play
+    playCount++;
 
     let result;
 
@@ -27,7 +37,7 @@ function playGame(playerChoice) {
         (playerChoice === "paper" && computerChoice === "rock") ||
         (playerChoice === "scissors" && computerChoice === "paper")
     ) {
-        result = "You win!";
+        result = "You win! Game over!";
     }
 
     // Otherwise the computer wins
@@ -41,5 +51,18 @@ function playGame(playerChoice) {
     document.getElementById("computerChoice").innerHTML =
         "Computer chose: " + computerChoice;
 
-    document.getElementById("result").innerHTML = result;
+    document.getElementById("result").innerHTML =
+        result + "<br>Play: " + playCount + " of 3";
+
+    // Bonus: Stop immediately if the player wins
+    if (result === "You win! Game over!") {
+        playCount = 3;
+        return;
+    }
+
+    // Stop after 3 plays
+    if (playCount === 3) {
+        document.getElementById("result").innerHTML +=
+            "<br>Game over! You have used all 3 plays.";
+    }
 }
