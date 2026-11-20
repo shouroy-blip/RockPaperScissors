@@ -1,12 +1,15 @@
+const MAX_PLAYS = 5;
+
 let playCount = 0;
 let lastComputerChoice = "";
+let playerGuesses = [];
 
 function playGame(playerChoice) {
 
-    // Stop the game after 3 plays
-    if (playCount >= 3) {
+    // Stop the game after MAX_PLAYS plays
+    if (playCount >= MAX_PLAYS) {
         document.getElementById("result").innerHTML =
-            "Game over! You have played 3 times.";
+            "Game over! You have played " + MAX_PLAYS + " times.";
         return;
     }
 
@@ -21,8 +24,9 @@ function playGame(playerChoice) {
 
     lastComputerChoice = computerChoice;
 
-    // Count this play
+    // Count this play and remember what the player guessed
     playCount++;
+    playerGuesses.push(playerChoice);
 
     let result;
 
@@ -52,17 +56,24 @@ function playGame(playerChoice) {
         "Computer chose: " + computerChoice;
 
     document.getElementById("result").innerHTML =
-        result + "<br>Play: " + playCount + " of 3";
+        result + "<br>Play: " + playCount + " of " + MAX_PLAYS;
 
-    // Bonus: Stop immediately if the player wins
+    // Stop immediately if the player wins
     if (result === "You win! Game over!") {
-        playCount = 3;
+        playCount = MAX_PLAYS;
+        showGuessHistory("Game over! You have used all " + MAX_PLAYS + " plays.");
         return;
     }
 
-    // Stop after 3 plays
-    if (playCount === 3) {
-        document.getElementById("result").innerHTML +=
-            "<br>Game over! You have used all 3 plays.";
+    // Stop after MAX_PLAYS plays
+    if (playCount === MAX_PLAYS) {
+        showGuessHistory("Game over! You have used all " + MAX_PLAYS + " plays.");
     }
+}
+
+// Appends the final message plus the list of all guesses made this game
+function showGuessHistory(message) {
+    document.getElementById("result").innerHTML +=
+        "<br>" + message +
+        "<br>Your guesses: " + playerGuesses.join(", ");
 }
